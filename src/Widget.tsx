@@ -51,7 +51,7 @@ function PieChart(props: PieChartProps) {
             name: "Pie Chart",
             type: "pie",
             radius: "60%",
-            center: ["50%", "50%"],
+            center: ["50%", "55%"],
 
             data: data,
             label: {
