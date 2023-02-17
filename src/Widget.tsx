@@ -86,7 +86,7 @@ function PieChart(props: PieChartProps) {
     }
   }, [data, chartRef]);
 
-  return <div ref={chartRef} style={{ width: "100%", height: "500px" }}></div>;
+  return <div ref={chartRef} style={{ width: "100%", height: "100vh" }}></div>;
 }
 
 export { PieChart };
