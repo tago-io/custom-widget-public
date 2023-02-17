@@ -12,7 +12,7 @@ describe("parseTagoData", () => {
     expect(result).toEqual([]);
   });
 
-  it("return null when tagoData is empty", () => {
+  it("return an empty array when tagoData is empty", () => {
     const result = parseTagoData([]);
     expect(result).toEqual([]);
   });
