@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
 import "@tago-io/custom-widget";
 import "@tago-io/custom-widget/dist/custom-widget.css";
-import { parseEverything } from "./Helpers/parseEverything";
-import { PieChart } from "./Widget";
+
+import { useEffect, useState } from "react";
+
+import { parseTagoData } from "./Helpers/parse-tago-data";
 import { ParsedData } from "./types";
+import { PieChart } from "./Widget";
 
 /**
  * Widget view component.
@@ -26,7 +28,7 @@ function WidgetView() {
     // For more control over updating the state, the callback passed to `onRealtime` can check if
     // the data has changed before updating the state to avoid re-rendering unnecessarily.
     window.TagoIO.onRealtime((data) => {
-      const parsedData = parseEverything(data);
+      const parsedData = parseTagoData(data);
       setData(parsedData);
     });
   }, []);

@@ -1,19 +1,19 @@
-import { parseEverything } from "./parseEverything";
+import { parseTagoData } from "./parse-tago-data";
 import { TagoData } from "~/types";
 
-describe("parseEverything", () => {
+describe("parseTagoData", () => {
   it("return null when tagoData is null", () => {
-    const result = parseEverything(null);
+    const result = parseTagoData(null);
     expect(result).toBeNull();
   });
 
   it("return an empty array when result is empty", () => {
-    const result = parseEverything([{ result: [] }]);
+    const result = parseTagoData([{ result: [] }]);
     expect(result).toEqual([]);
   });
 
   it("return null when tagoData is empty", () => {
-    const result = parseEverything([]);
+    const result = parseTagoData([]);
     expect(result).toEqual([]);
   });
 
@@ -54,7 +54,7 @@ describe("parseEverything", () => {
       { value: 6, name: "Salad Mix", unit: "%", label: "Taylor Farms" },
     ];
 
-    const result = parseEverything(tagoData);
+    const result = parseTagoData(tagoData);
     expect(result).toEqual(expected);
   });
 });

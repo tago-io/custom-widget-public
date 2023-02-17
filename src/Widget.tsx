@@ -6,6 +6,11 @@ type PieChartProps = {
   data: { name: string; value: number }[];
 };
 
+/**
+ * Construct a pie chart from EChart Library
+ * @param props
+ * @returns
+ */
 function PieChart(props: PieChartProps) {
   const { data } = props;
   const chartRef = useRef<HTMLDivElement>(null);

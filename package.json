@@ -6,7 +6,7 @@
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "scripts": {
     "start": "parcel src/index.html",
-    "build": "parcel build src/index.html --public-url /6021b441fc48a400183c9604/storage/chart",
+    "build": "rm -rf dist; parcel build src/index.html --public-url /638645358ccbe400205c3058/storage/pie_chart",
     "test": "jest",
     "test:watch": "jest --watch",
     "lint": "eslint src/",

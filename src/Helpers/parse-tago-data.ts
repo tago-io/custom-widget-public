@@ -1,6 +1,11 @@
 import { ParsedData, TagoData } from "~/types";
 
-function parseEverything(tagoData: TagoData[] | null): ParsedData[] | null {
+/**
+ * Normalize Data from TagoIO to the EChart format
+ * @param tagoData
+ * @returns
+ */
+function parseTagoData(tagoData: TagoData[] | null): ParsedData[] | null {
   if (!tagoData) {
     return null;
   }
@@ -23,4 +28,4 @@ function parseEverything(tagoData: TagoData[] | null): ParsedData[] | null {
   return allChartData;
 }
 
-export { parseEverything };
+export { parseTagoData };
