@@ -2,10 +2,10 @@ import "@tago-io/custom-widget";
 import "@tago-io/custom-widget/dist/custom-widget.css";
 
 import { useEffect, useState } from "react";
+import { parseTagoParams } from "./Helpers/parse-params";
 
-import { parseTagoData } from "./Helpers/parse-tago-data";
-import { ParsedData } from "./types";
-import { PieChart } from "./Widget";
+import { ParsedData, parseTagoData } from "./Helpers/parse-tago-data";
+import { BarChart } from "./Widget";
 
 /**
  * Widget view component.
@@ -19,10 +19,16 @@ import { PieChart } from "./Widget";
  */
 function WidgetView() {
   const [data, setData] = useState<ParsedData[] | null>(null);
+  const [params, setParams] = useState<{ [key: string]: boolean } | null>(null);
 
   useEffect(() => {
     // Start communication with TagoIO Admin/RUN.
     window.TagoIO.ready();
+
+    window.TagoIO.onStart((widgetInfo) => {
+      const parsedParams = parseTagoParams(widgetInfo.display?.parameters);
+      setParams(parsedParams);
+    });
 
     // Receive the widget's data and realtime data updates.
     // For more control over updating the state, the callback passed to `onRealtime` can check if
@@ -34,7 +40,7 @@ function WidgetView() {
   }, []);
   if (!data) return null;
 
-  return <PieChart data={data} />;
+  return <BarChart data={data} params={params} />;
 }
 
 export { WidgetView };

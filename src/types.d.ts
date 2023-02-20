@@ -25,7 +25,7 @@ export interface TagoData {
      */
     group?: string;
     metadata?: {
-      piedata: {
+      bardata: {
         value: number;
         category: string;
         unit: string;
@@ -34,11 +34,3 @@ export interface TagoData {
     };
   }[];
 }
-
-export interface ParsedData {
-  value: number;
-  name: string;
-  unit: string;
-  label: string;
-}
-[];
