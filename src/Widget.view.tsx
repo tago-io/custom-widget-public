@@ -2,7 +2,7 @@ import "@tago-io/custom-widget";
 import "@tago-io/custom-widget/dist/custom-widget.css";
 
 import { useEffect, useState } from "react";
-import { parseTagoParams } from "./Helpers/parse-params";
+import { IBarParams, parseTagoParams } from "./Helpers/parse-params";
 
 import { ParsedData, parseTagoData } from "./Helpers/parse-tago-data";
 import { BarChart } from "./Widget";
@@ -18,8 +18,8 @@ import { BarChart } from "./Widget";
  * in the presentational component and its sub-components.
  */
 function WidgetView() {
-  const [data, setData] = useState<ParsedData[] | null>(null);
-  const [params, setParams] = useState<{ [key: string]: boolean } | null>(null);
+  const [data, setData] = useState<ParsedData | null>(null);
+  const [params, setParams] = useState<IBarParams>({ horizontal: false, xlabel: "", ylabel: "" });
 
   useEffect(() => {
     // Start communication with TagoIO Admin/RUN.

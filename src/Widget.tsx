@@ -2,10 +2,11 @@ import { useRef, useEffect } from "react";
 import * as echarts from "echarts";
 import { EChartsOption } from "echarts";
 import { ParsedData } from "./Helpers/parse-tago-data";
+import { IBarParams } from "./Helpers/parse-params";
 
 type BarChartProps = {
   data: ParsedData;
-  params: { [key: string]: boolean } | null;
+  params: IBarParams;
 };
 
 /**
@@ -22,10 +23,20 @@ function BarChart(props: BarChartProps) {
   const categoryParams = {
     type: "category",
     data: labelList,
+    name: (props.params?.horizontal ? props.params.xlabel : props.params.ylabel) || "",
+    nameTextStyle: {
+      fontStyle: "normal",
+      fontWeight: "bolder",
+    },
   };
   const valueParams = {
     type: "value",
     boundaryGap: [0, 0.01],
+    name: (props.params?.horizontal ? props.params.ylabel : props.params.xlabel) || "",
+    nameTextStyle: {
+      fontStyle: "normal",
+      fontWeight: "bolder",
+    },
   };
   const xAxis: any = props.params?.horizontal ? valueParams : categoryParams;
   const yAxis: any = !props.params?.horizontal ? valueParams : categoryParams;
