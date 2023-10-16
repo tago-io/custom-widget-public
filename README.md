@@ -15,7 +15,7 @@ $ npm run start
 
 To build the project, update the package.json file:
 ```
-"build": "parcel build src/index.html --public-url /6021b441fc48a400183c9604/storage/chart",
+"build": "vite build --base /6021b441fc48a400183c9604/storage/chart",
 ```
 Where Public URL is /PROFILE_ID/storage/CHART_FOLDER
 
