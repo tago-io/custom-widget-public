@@ -25,7 +25,7 @@ function parseUserSettings(userParams: any): userData {
   }
 
   userInfo.dateFormat = userInfo.dateFormat.replace("YYYY", "yyyy").replace("DD", "dd");
-  userInfo.timeFormat = userInfo.timeFormat.replace("12", "hh:mm a").replace("24", "HH:mm");
+  //userInfo.timeFormat = userInfo.timeFormat.replace("12", "hh:mm a").replace("24", "HH:mm");
 
   return userInfo;
 }

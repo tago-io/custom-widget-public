@@ -21,7 +21,6 @@ function BarChart(props: BarChartProps) {
   const { data, user } = props;
   const chartRef = useRef<HTMLDivElement>(null);
   const chartInstance = useRef<echarts.ECharts>();
-
   const hours = user.timeFormat === "24" ? "HH" : "hh";
   const amPm = user.timeFormat === "24" ? "" : "a";
   const dateLuxonFormat = user.dateFormat?.replace("DD", "dd").replace("YYYY", "yyyy") + " " + hours + ":mm:ss " + amPm;
@@ -53,9 +52,8 @@ function BarChart(props: BarChartProps) {
           formatter: function (params) {
             const data = params[0].data;
             const dateTime = DateTime.fromISO(data[0], { zone: user.timezone });
-            const dateLuxonFormat = "dd/MM/yyyy " + hours + ":mm:ss " + amPm;
-            const luxonTime = dateTime.toFormat(dateLuxonFormat);
 
+            const luxonTime = dateTime.toFormat(dateLuxonFormat);
 
             const timeElement = `<div>${luxonTime}</div>`;
 
@@ -70,7 +68,7 @@ function BarChart(props: BarChartProps) {
 
             const tooltipContent = `<div style="display: flex; flex-direction: column;">
               ${timeElement}
-              ${seriesElements.join('')}
+              ${seriesElements.join("")}
             </div>`;
 
             return tooltipContent;
