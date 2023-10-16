@@ -1,11 +1,11 @@
 import { TagoData } from "~/types";
 
-type category = string;
+type binName = string;
 export interface ParsedData {
   series: {
-    name: category;
-    type: "bar";
-    data: number[];
+    name: binName;
+    type: "line";
+    data: [string, number][];
   }[];
 
   labels: string[];
@@ -16,42 +16,35 @@ export interface ParsedData {
  * @param tagoData
  * @returns
  */
-function parseTagoData(tagoData: TagoData[] | null): ParsedData | null {
+function parseTagoData(tagoData: TagoData[] | null): ParsedData {
   const allChartData: ParsedData = { series: [], labels: [] };
 
   if (!tagoData || tagoData.length === 0) {
     return allChartData;
   }
 
-  const allData = tagoData.find((e) => e)?.result.find((e) => e)?.metadata;
-  if (!allData?.bardata || allData.bardata.length === 0) {
-    return allChartData;
-  }
+  const dataList = tagoData
+    .map((item) => item.result)
+    .flat()
+    .filter((x) => x.metadata);
 
-  const labelSet = new Set(allData.bardata.map((e) => e.label));
-  allChartData.labels = Array.from(labelSet.values());
-
-  const categorySet = new Set(allData.bardata.map((e) => e.category));
-  const categories = Array.from(categorySet.values());
-
-  // iterate on labelSet values without downlevelIteration
-  for (const category of categories) {
-    // const dataList = allData.bardata.filter((e) => e.category === category);
-    allChartData.series.push({
-      name: category,
-      type: "bar",
-      data: Array(allChartData.labels.length).fill(0),
-    });
-  }
-
-  for (const barData of allData.bardata) {
-    const serie = allChartData.series.find((e) => e.name === barData.category);
-    if (!serie) {
-      continue;
+  dataList.forEach((item) => {
+    if (!item.metadata) {
+      return;
     }
-    const labelIndex = allChartData.labels.findIndex((e) => e === barData.label);
-    serie.data[labelIndex] = barData.value;
-  }
+
+    const seriesData = {
+      name: item.value as string,
+      type: "line",
+      data: Object.keys(item.metadata)
+        .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
+        .map((key) => [key, item.metadata?.[key]]),
+    };
+
+    allChartData.series.push(seriesData as any);
+
+    allChartData.labels.push(item.value as string);
+  });
 
   return allChartData;
 }

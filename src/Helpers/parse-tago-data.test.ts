@@ -1,5 +1,4 @@
 import { parseTagoData } from "./parse-tago-data";
-import { TagoData } from "~/types";
 
 describe("parseTagoData", () => {
   it("return null when tagoData is null", () => {
@@ -17,42 +16,40 @@ describe("parseTagoData", () => {
     expect(result).toEqual({ series: [], labels: [] });
   });
 
-  it("return array with expected results", () => {
-    const tagoData: TagoData[] = [
+  it("return an array with the correct values", () => {
+    const result = parseTagoData([
       {
         result: [
           {
-            variable: "chart",
-            time: "2023-02-16T22:07:06.639Z",
+            variable: "bin_chart",
+            group: "binID",
+            value: "binName",
+            time: new Date().toISOString(),
             metadata: {
-              bardata: [
-                { value: 12, category: "Berries", unit: "%", label: "Taylor Farms" },
-                { value: 4, category: "Berries", unit: "%", label: "JK" },
-                { value: 9, category: "Berries", unit: "%", label: "JT" },
-                { value: 2, category: "Default", unit: "%", label: "Taylor Farms 5" },
-                { value: 6, category: "Default", unit: "%", label: "Taylor Farms 2" },
-                { value: 8, category: "Default", unit: "%", label: "Taylor Farms 3" },
-                { value: 9, category: "Default", unit: "%", label: "Taylor Farms 4" },
-                { value: 5, category: "F.G", unit: "%", label: "Taylor Farms" },
-                { value: 6, category: "Salad Mix", unit: "%", label: "Taylor Farms" },
-              ],
+              "2023-10-05T12:19:30.269Z": 10,
+              "2023-10-05T12:20:30.269Z": 11,
+              "2023-10-05T12:21:30.269Z": 12,
+              "2023-10-05T14:57:30.269Z": 98,
+              "2023-10-05T14:58:30.269Z": 99,
+              "2023-10-05T14:59:30.269Z": 100,
             },
           },
         ],
       },
-    ];
+    ]);
 
-    const expected = {
-      labels: ["Taylor Farms", "JK", "JT", "Taylor Farms 5", "Taylor Farms 2", "Taylor Farms 3", "Taylor Farms 4"],
-      series: [
-        { data: [12, 4, 9, 0, 0, 0, 0], name: "Berries", type: "bar" },
-        { data: [0, 0, 0, 2, 6, 8, 9], name: "Default", type: "bar" },
-        { data: [5, 0, 0, 0, 0, 0, 0], name: "F.G", type: "bar" },
-        { data: [6, 0, 0, 0, 0, 0, 0], name: "Salad Mix", type: "bar" },
+    expect(result.labels).toStrictEqual(["binName"]);
+    expect(result.series[0]).toStrictEqual({
+      data: [
+        ["2023-10-05T12:19:30.269Z", 10],
+        ["2023-10-05T12:20:30.269Z", 11],
+        ["2023-10-05T12:21:30.269Z", 12],
+        ["2023-10-05T14:57:30.269Z", 98],
+        ["2023-10-05T14:58:30.269Z", 99],
+        ["2023-10-05T14:59:30.269Z", 100],
       ],
-    };
-
-    const result = parseTagoData(tagoData);
-    expect(result).toEqual(expected);
+      name: "binName",
+      type: "line",
+    });
   });
 });

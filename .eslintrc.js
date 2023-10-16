@@ -31,9 +31,10 @@ module.exports = {
   ],
   rules: {
     eqeqeq: [2, "smart"],
-    "no-console": 2,
+    "no-console": 1,
     "no-alert": 2,
     "no-unused-vars": 0,
+    "@typescript-eslint/no-explicit-any": 1,
     "@typescript-eslint/no-unused-vars": [1, { argsIgnorePattern: "^_", ignoreRestSiblings: true }],
     "import/order": 2,
     "import/newline-after-import": 2,

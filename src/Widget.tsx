@@ -1,12 +1,15 @@
-import { useRef, useEffect } from "react";
 import * as echarts from "echarts";
-import { EChartsOption } from "echarts";
-import { ParsedData } from "./Helpers/parse-tago-data";
+import { DateTime } from "luxon";
+import { useEffect, useRef } from "react";
+
 import { IBarParams } from "./Helpers/parse-params";
+import { ParsedData } from "./Helpers/parse-tago-data";
+import { userData } from "./Helpers/parse-user";
 
 type BarChartProps = {
   data: ParsedData;
   params: IBarParams;
+  user: userData;
 };
 
 /**
@@ -15,49 +18,37 @@ type BarChartProps = {
  * @returns
  */
 function BarChart(props: BarChartProps) {
-  const { data } = props;
+  const { data, user } = props;
   const chartRef = useRef<HTMLDivElement>(null);
   const chartInstance = useRef<echarts.ECharts>();
 
-  const labelList = props.data.labels;
-  const categoryParams = {
-    type: "category",
-    data: labelList,
-    name: (props.params?.horizontal ? props.params.xlabel : props.params.ylabel) || "",
-    nameTextStyle: {
-      fontStyle: "normal",
-      fontWeight: "bolder",
-    },
-  };
-  const valueParams = {
-    type: "value",
-    boundaryGap: [0, 0.01],
-    name: (props.params?.horizontal ? props.params.ylabel : props.params.xlabel) || "",
-    nameTextStyle: {
-      fontStyle: "normal",
-      fontWeight: "bolder",
-    },
-  };
-  const xAxis: any = props.params?.horizontal ? valueParams : categoryParams;
-  const yAxis: any = !props.params?.horizontal ? valueParams : categoryParams;
+  data.series = data.series.map((serie) => ({
+    ...serie,
+    data: serie.data.map((item) => {
+      const date = DateTime.fromISO(item[0]).setZone(user.timezone).toISO() as string;
+      return [date, item[1]];
+    }),
+  }));
 
   useEffect(() => {
     if (chartRef.current) {
       const chart = echarts.init(chartRef.current);
       chartInstance.current = chart;
-      const options: EChartsOption = {
+      const options: echarts.EChartsOption = {
         tooltip: {
           textStyle: {
             fontSize: 12,
             lineHeight: 13,
+            fontWeight: "normal",
+            color: "#000000",
           },
           trigger: "axis",
           axisPointer: {
-            type: "shadow",
+            type: "line",
           },
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          // formatter: (params: { data: any }) => {
-          //   return `${params.data.name} <br/> ${params.data.label} <br/> ${params.data.value}`;
+          // formatter: (value) => {
+          //   console.log(value);
+          //   return "";
           // },
           displayMode: "single",
           show: true,
@@ -66,22 +57,51 @@ function BarChart(props: BarChartProps) {
           borderWidth: 2,
         },
         legend: {
-          // type: "scroll",
-          // orient: "horizontal",
-          // icon: "circle",
-          // left: 12,
-          // top: 10,
-          // data: data?.map((d) => d.name),
+          data: data.labels,
+          orient: "horizontal",
+          bottom: 45,
+          left: "center", // This centers the legend at the bottom,
+          icon: "pin",
         },
-        xAxis,
-        yAxis,
+        xAxis: {
+          type: "time",
+          // data: data.labels,
+          // name: "Time",
+          // boundaryGap: false, // This ensures the line touches the x-axis
+          nameTextStyle: {
+            fontStyle: "normal",
+            fontWeight: "bolder",
+          },
+        },
+        yAxis: {
+          type: "value",
+          // name: "Bin Level",
+          nameTextStyle: {
+            fontStyle: "normal",
+            fontWeight: "normal",
+          },
+          splitLine: {
+            lineStyle: {
+              color: "#c3c3c3",
+            },
+          },
+        },
         grid: {
+          top: "10%",
           left: "3%",
           right: "4%",
-          bottom: "3%",
+          bottom: "26%",
           containLabel: true,
         },
-        series: props.data.series,
+        dataZoom: [
+          {
+            type: "slider",
+            xAxisIndex: [0], // This applies the zoom to the first (and in this case, the only) x-axis.
+            start: 0, // Initial start percentage
+            end: 100, // Initial end percentage
+          },
+        ],
+        series: data.series,
       };
 
       chart.setOption(options);

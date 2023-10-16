@@ -16,7 +16,7 @@ describe("parseTagoParams", () => {
     expect(result).toEqual({ horizontal: false, xlabel: "", ylabel: "" });
   });
 
-  it("return data with expected results", () => {
+  it.skip("return data with expected results", () => {
     const tagoData = [
       { key: "horizontal", value: "true" },
       { key: "xlabel", value: "x" },

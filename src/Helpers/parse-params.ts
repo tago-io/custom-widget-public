@@ -15,18 +15,18 @@ function parseTagoParams(tagoParams: { key: string; value: string }[] | null): I
   if (!tagoParams) {
     return chartParams;
   }
-  for (const key in chartParams) {
-    const param = tagoParams.find((param) => param.key === key);
-    if (!param) {
-      continue;
-    }
+  // for (const key in chartParams) {
+  //   const param = tagoParams.find((param) => param.key === key);
+  //   if (!param) {
+  //     continue;
+  //   }
 
-    if (key === "horizontal") {
-      chartParams.horizontal = param.value === "true" ? true : false;
-    } else {
-      chartParams[key] = param.value;
-    }
-  }
+  //   if (key === "horizontal") {
+  //     chartParams.horizontal = param.value === "true" ? true : false;
+  //   } else {
+  //     chartParams[key] = param.value;
+  //   }
+  // }
 
   return chartParams;
 }

@@ -17,7 +17,8 @@ export declare global {
 export interface TagoData {
   result: {
     variable: string;
-    value?: number; //number | string | boolean
+    value?: string; //number | string | boolean
+    group?: string;
     unit?: string;
     time: string;
     /**
@@ -25,12 +26,7 @@ export interface TagoData {
      */
     group?: string;
     metadata?: {
-      bardata: {
-        value: number;
-        category: string;
-        unit: string;
-        label: string;
-      }[];
+      [key: string]: number;
     };
   }[];
 }
