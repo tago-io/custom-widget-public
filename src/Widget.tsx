@@ -22,6 +22,10 @@ function BarChart(props: BarChartProps) {
   const chartRef = useRef<HTMLDivElement>(null);
   const chartInstance = useRef<echarts.ECharts>();
 
+  const hours = user.timeFormat === "24" ? "HH" : "hh";
+  const amPm = user.timeFormat === "24" ? "" : "a";
+  const dateLuxonFormat = user.dateFormat?.replace("DD", "dd").replace("YYYY", "yyyy") + " " + hours + ":mm:ss " + amPm;
+
   data.series = data.series.map((serie) => ({
     ...serie,
     data: serie.data.map((item) => {
@@ -46,10 +50,31 @@ function BarChart(props: BarChartProps) {
           axisPointer: {
             type: "line",
           },
-          // formatter: (value) => {
-          //   console.log(value);
-          //   return "";
-          // },
+          formatter: function (params) {
+            const data = params[0].data;
+            const dateTime = DateTime.fromISO(data[0], { zone: user.timezone });
+            const dateLuxonFormat = "dd/MM/yyyy " + hours + ":mm:ss " + amPm;
+            const luxonTime = dateTime.toFormat(dateLuxonFormat);
+
+
+            const timeElement = `<div>${luxonTime}</div>`;
+
+            const seriesElements = params.map((param) => {
+              const marker = param.marker;
+              const value = param.data[1];
+              return `<div style="display: flex; justify-content: space-between;">
+                <div>${marker} ${param.seriesName}</div>
+                <div>${value}</div>
+              </div>`;
+            });
+
+            const tooltipContent = `<div style="display: flex; flex-direction: column;">
+              ${timeElement}
+              ${seriesElements.join('')}
+            </div>`;
+
+            return tooltipContent;
+          },
           displayMode: "single",
           show: true,
           renderMode: "auto",
@@ -71,6 +96,18 @@ function BarChart(props: BarChartProps) {
           nameTextStyle: {
             fontStyle: "normal",
             fontWeight: "bolder",
+          },
+          axisLabel: {
+            // Format the date
+            formatter: function (value) {
+              const dateTime = String(DateTime.fromMillis(value));
+
+              const dateFormat = hours + ":mm";
+              const time = DateTime.fromISO(dateTime, {
+                zone: user.timezone,
+              }).toFormat(dateFormat);
+              return time;
+            },
           },
         },
         yAxis: {
@@ -96,9 +133,19 @@ function BarChart(props: BarChartProps) {
         dataZoom: [
           {
             type: "slider",
+            textStyle: { width: 77, overflow: "break", fontSize: 10 },
             xAxisIndex: [0], // This applies the zoom to the first (and in this case, the only) x-axis.
             start: 0, // Initial start percentage
             end: 100, // Initial end percentage
+            labelFormatter: (value) => {
+              const date = DateTime.fromMillis(value, {
+                zone: user.timezone,
+              });
+              if (!date.isValid) {
+                return "";
+              }
+              return date.toFormat(dateLuxonFormat);
+            },
           },
         ],
         series: data.series,
@@ -116,7 +163,7 @@ function BarChart(props: BarChartProps) {
         window.removeEventListener("resize", handleResize);
       };
     }
-  }, [data, chartRef]);
+  }, [data, chartRef, user.timeFormat, user.dateFormat]);
 
   return (
     <div style={{ width: "100%", height: "90vh" }}>
