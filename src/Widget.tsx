@@ -60,7 +60,7 @@ function BarChart(props: BarChartProps) {
             const seriesElements = params.map((param) => {
               const marker = param.marker;
               const value = param.data[1];
-              return `<div style="display: flex; justify-content: space-between;">
+              return `<div style="display: flex; justify-content: space-between; gap: 10px;">
                 <div>${marker} ${param.seriesName}</div>
                 <div>${value}</div>
               </div>`;
