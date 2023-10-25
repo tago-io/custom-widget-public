@@ -20,7 +20,7 @@ type BarChartProps = {
 function BarChart(props: BarChartProps) {
   const { data, user } = props;
   const chartRef = useRef<HTMLDivElement>(null);
-  const chartInstance = useRef<echarts.ECharts>();
+  const chartInstance = useRef<echarts.ECharts | null>(null);
   const hours = user.timeFormat === "24" ? "HH" : "hh";
   const amPm = user.timeFormat === "24" ? "" : "a";
   const dateLuxonFormat = user.dateFormat?.replace("DD", "dd").replace("YYYY", "yyyy") + " " + hours + ":mm:ss " + amPm;
@@ -35,8 +35,13 @@ function BarChart(props: BarChartProps) {
 
   useEffect(() => {
     if (chartRef.current) {
+      if (chartInstance.current) {
+        chartInstance.current.dispose();
+      }
+
       const chart = echarts.init(chartRef.current);
       chartInstance.current = chart;
+
       const options: echarts.EChartsOption = {
         tooltip: {
           textStyle: {
@@ -158,10 +163,13 @@ function BarChart(props: BarChartProps) {
       window.addEventListener("resize", handleResize);
 
       return () => {
+        if (chartInstance.current) {
+          chartInstance.current.dispose();
+        }
         window.removeEventListener("resize", handleResize);
       };
     }
-  }, [data, chartRef, user.timeFormat, user.dateFormat]);
+  }, [data, chartRef, user.timeFormat, user.dateFormat, user.timezone, dateLuxonFormat, hours]);
 
   return (
     <div style={{ width: "100%", height: "90vh" }}>
