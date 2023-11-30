@@ -6,7 +6,7 @@
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "scripts": {
     "start": "vite --mode development",
-    "build": "vite build --base /64f09134596b3e000f78b1a0/storage/line-chart/",
+    "build": "vite build --base /YOUR_PROFILE_ID/storage/line-chart/",
     "test": "jest",
     "test:watch": "jest --watch",
     "lint": "eslint src/",

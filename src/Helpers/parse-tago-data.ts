@@ -1,10 +1,10 @@
 import { TagoData } from "~/types";
 
-type binName = string;
+type assetName = string;
 export interface ParsedData {
   series: {
-    name: binName;
-    type: "line";
+    name: assetName;
+    type: string; /// line
     data: [string, number][];
   }[];
 
@@ -28,23 +28,29 @@ function parseTagoData(tagoData: TagoData[] | null): ParsedData {
     .flat()
     .filter((x) => x.metadata);
 
-  dataList.forEach((item) => {
+  // check if the key is a valid ISO date
+  const filterISOKeys = (key: string) => {
+    const date = new Date(key);
+    return date instanceof Date && !isNaN(date.getTime());
+  };
+
+  for (const item of dataList) {
     if (!item.metadata) {
-      return;
+      continue;
     }
 
     const seriesData = {
       name: item.value as string,
       type: "line",
       data: Object.keys(item.metadata)
+        .filter(filterISOKeys)
         .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
-        .map((key) => [key, item.metadata?.[key]]),
+        .map((key) => [key, item.metadata?.[key]] as [string, number]),
     };
 
-    allChartData.series.push(seriesData as any);
-
+    allChartData.series.push(seriesData);
     allChartData.labels.push(item.value as string);
-  });
+  }
 
   return allChartData;
 }

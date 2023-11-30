@@ -54,7 +54,7 @@ function BarChart(props: BarChartProps) {
           axisPointer: {
             type: "line",
           },
-          formatter: function (params) {
+          formatter: function (params: any) {
             const data = params[0].data;
             const dateTime = DateTime.fromISO(data[0], { zone: user.timezone });
 
@@ -62,7 +62,7 @@ function BarChart(props: BarChartProps) {
 
             const timeElement = `<div>${luxonTime}</div>`;
 
-            const seriesElements = params.map((param) => {
+            const seriesElements = params.map((param: any) => {
               const marker = param.marker;
               const value = param.data[1];
               return `<div style="display: flex; justify-content: space-between; gap: 10px;">

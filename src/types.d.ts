@@ -26,7 +26,7 @@ export interface TagoData {
      */
     group?: string;
     metadata?: {
-      [key: string]: number;
+      [key: string]: string | number;
     };
   }[];
 }
